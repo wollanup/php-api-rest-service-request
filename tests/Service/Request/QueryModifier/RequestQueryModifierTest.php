@@ -30,12 +30,21 @@ class RequestQueryModifierTest extends TestCase
         $mc  = new ModelCriteria();
         $this->assertEquals($mc, $rqm->apply($mc));
     }
-    
+
     public function testSetQuery()
     {
         $rqm = new RequestQueryModifier(new Request);
         $rqm->setQuery(new ModelCriteria());
         $mc = new ModelCriteria();
+        $this->assertEquals($mc, $rqm->apply($mc));
+    }
+    
+    public function testWithNonGetMethod()
+    {
+        $r = new Request;
+        $r->setMethod('POST');
+        $rqm = new RequestQueryModifier($r);
+        $mc  = new ModelCriteria();
         $this->assertEquals($mc, $rqm->apply($mc));
     }
 }

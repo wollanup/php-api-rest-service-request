@@ -52,6 +52,10 @@ class RequestQueryModifier implements RequestQueryModifierInterface
         if ($this->query) {
             $query->mergeWith($this->query);
         }
+    
+        if (strtoupper($this->request->getMethod()) !== 'GET') {
+            return $query;
+        }
 
         # Apply filters
         $filters = new FilterModifier($this->request);
@@ -72,7 +76,7 @@ class RequestQueryModifier implements RequestQueryModifierInterface
     public function setQuery(ModelCriteria $query)
     {
         $this->query = $query;
-        
+    
         return $this;
     }
 }

@@ -14,7 +14,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class RequestPagination implements PaginationInterface
 {
-    
+
     protected $limit = null;
     protected $page = null;
     use GetParam;
@@ -22,7 +22,7 @@ class RequestPagination implements PaginationInterface
      * @var ServerRequestInterface
      */
     protected $request;
-    
+
     /**
      * RequestPagination constructor.
      *
@@ -31,27 +31,30 @@ class RequestPagination implements PaginationInterface
     public function __construct(ServerRequestInterface $request)
     {
         $this->request = $request;
-        
-        if ($request->getMethod() !== 'GET') {
-            $limit = (int)$this->getParam($this->request, self::REQUEST_PARAM_LIMIT, self::DEFAULT_LIMIT);
-            
-            if ($limit > self::MAX_LIMIT) {
-                $limit = self::MAX_LIMIT;
-            }
-            if ($limit < 1) {
-                $limit = 1;
-            }
-            $this->limit = $limit;
-            
-            $page       = (int)$this->getParam($this->request, self::REQUEST_PARAM_PAGE, self::DEFAULT_PAGE);
-            $this->page = $page < 1 ? self::DEFAULT_PAGE : $page;
+    
+        if (strtoupper($request->getMethod()) !== 'GET') {
+            return;
         }
+    
+        $limit = (int)$this->getParam($this->request, self::REQUEST_PARAM_LIMIT, self::DEFAULT_LIMIT);
+    
+        if ($limit > self::MAX_LIMIT) {
+            $limit = self::MAX_LIMIT;
+        }
+        if ($limit < 1) {
+            $limit = 1;
+        }
+        $this->limit = $limit;
+    
+        $page       = (int)$this->getParam($this->request, self::REQUEST_PARAM_PAGE, self::DEFAULT_PAGE);
+        $this->page = $page < 1 ? self::DEFAULT_PAGE : $page;
     }
     
     /**
      * @return int
      */
-    public function getLimit()
+    public
+    function getLimit()
     {
         return $this->limit;
     }
@@ -59,7 +62,8 @@ class RequestPagination implements PaginationInterface
     /**
      * @return int
      */
-    public function getPage()
+    public
+    function getPage()
     {
         return $this->page;
     }

@@ -14,12 +14,16 @@ use Psr\Http\Message\UriInterface;
 
 class Request implements ServerRequestInterface
 {
-    
+
+    /**
+     * @var string
+     */
+    protected $method = 'GET';
     /**
      * @var array
      */
     protected $queryParams = [];
-    
+
     /**
      * TestRequestForQueryModifiers constructor.
      *
@@ -175,7 +179,19 @@ class Request implements ServerRequestInterface
      */
     public function getMethod()
     {
-        // TODO: Implement getMethod() method.
+        return $this->method;
+    }
+    
+    /**
+     * @param string $method
+     *
+     * @return Request
+     */
+    public function setMethod($method)
+    {
+        $this->method = $method;
+        
+        return $this;
     }
     
     /**

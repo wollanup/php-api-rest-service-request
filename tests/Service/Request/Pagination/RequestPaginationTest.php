@@ -15,14 +15,14 @@ use PHPUnit\Framework\TestCase;
 
 class RequestPaginationTest extends TestCase
 {
-    
+
     public function testCorrect()
     {
         $r = new Request([
             'limit' => 3,
             'page'  => 2,
         ]);
-        
+    
         $rp = new RequestPagination($r);
         $this->assertEquals(2, $rp->getPage());
         $this->assertEquals(3, $rp->getLimit());
@@ -33,15 +33,15 @@ class RequestPaginationTest extends TestCase
         $r  = new Request(['limit' => 'bob',]);
         $rp = new RequestPagination($r);
         $this->assertEquals(1, $rp->getLimit());
-        
+    
         $r  = new Request(['limit' => '',]);
         $rp = new RequestPagination($r);
         $this->assertEquals(1, $rp->getLimit());
-        
+    
         $r  = new Request(['limit' => false,]);
         $rp = new RequestPagination($r);
         $this->assertEquals(1, $rp->getLimit());
-        
+    
         $r  = new Request(['limit' => ["foo" => "bar"],]);
         $rp = new RequestPagination($r);
         $this->assertEquals(1, $rp->getLimit());
@@ -52,15 +52,15 @@ class RequestPaginationTest extends TestCase
         $r  = new Request(['page' => 'bob',]);
         $rp = new RequestPagination($r);
         $this->assertEquals(1, $rp->getPage());
-        
+    
         $r  = new Request(['page' => '',]);
         $rp = new RequestPagination($r);
         $this->assertEquals(1, $rp->getPage());
-        
+    
         $r  = new Request(['page' => false,]);
         $rp = new RequestPagination($r);
         $this->assertEquals(1, $rp->getPage());
-        
+    
         $r  = new Request(['page' => ["foo" => "bar"],]);
         $rp = new RequestPagination($r);
         $this->assertEquals(1, $rp->getPage());
@@ -82,5 +82,17 @@ class RequestPaginationTest extends TestCase
     {
         $rp = new RequestPagination(new Request(["limit" => PaginationInterface::MAX_LIMIT + 10]));
         $this->assertEquals(PaginationInterface::MAX_LIMIT, $rp->getLimit());
+    }
+    
+    public function testWithNonGetMethod()
+    {
+        $r = new Request([
+            'limit' => 3,
+            'page'  => 2,
+        ]);
+        $r->setMethod('POST');
+        $rp = new RequestPagination($r);
+        $this->assertNull($rp->getPage());
+        $this->assertNull($rp->getLimit());
     }
 }

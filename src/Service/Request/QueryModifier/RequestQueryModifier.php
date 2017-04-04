@@ -21,12 +21,16 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 class RequestQueryModifier implements RequestQueryModifierInterface
 {
-    
+
+    /**
+     * @var ModelCriteria
+     */
+    protected $query;
     /**
      * @var ServerRequestInterface
      */
-    private $request;
-    
+    protected $request;
+
     /**
      * Session constructor.
      *
@@ -36,7 +40,7 @@ class RequestQueryModifier implements RequestQueryModifierInterface
     {
         $this->request = $request;
     }
-    
+
     /**
      * @param \Propel\Runtime\ActiveQuery\ModelCriteria $query
      *
@@ -44,14 +48,31 @@ class RequestQueryModifier implements RequestQueryModifierInterface
      */
     public function apply(ModelCriteria $query)
     {
+        # Merge queries
+        if ($this->query) {
+            $query->mergeWith($this->query);
+        }
+
         # Apply filters
         $filters = new FilterModifier($this->request);
         $filters->apply($query);
-        
+    
         # Apply sorters
         $sorters = new SortModifier($this->request);
         $sorters->apply($query);
-        
+    
         return $query;
+    }
+    
+    /**
+     * @param ModelCriteria $query
+     *
+     * @return $this
+     */
+    public function setQuery(ModelCriteria $query)
+    {
+        $this->query = $query;
+        
+        return $this;
     }
 }

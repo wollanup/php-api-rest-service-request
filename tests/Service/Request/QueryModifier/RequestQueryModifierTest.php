@@ -23,11 +23,19 @@ use Propel\Runtime\ActiveQuery\ModelCriteria;
  */
 class RequestQueryModifierTest extends TestCase
 {
-    
+
     public function testApply()
     {
         $rqm = new RequestQueryModifier(new Request);
         $mc  = new ModelCriteria();
+        $this->assertEquals($mc, $rqm->apply($mc));
+    }
+    
+    public function testSetQuery()
+    {
+        $rqm = new RequestQueryModifier(new Request);
+        $rqm->setQuery(new ModelCriteria());
+        $mc = new ModelCriteria();
         $this->assertEquals($mc, $rqm->apply($mc));
     }
 }

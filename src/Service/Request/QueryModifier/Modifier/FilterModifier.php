@@ -31,7 +31,7 @@ class FilterModifier extends ModifierBase
      *
      * @var array
      */
-    private static $allowedFilterOperators = [
+    protected static $allowedFilterOperators = [
         Criteria::EQUAL,
         Criteria::NOT_EQUAL,
         Criteria::ALT_NOT_EQUAL,
@@ -57,6 +57,14 @@ class FilterModifier extends ModifierBase
     {
         self::$allowedFilterOperators = array_map('trim', self::$allowedFilterOperators);
         parent::__construct($request);
+    }
+    
+    /**
+     * @return array
+     */
+    public static function allowedFilterOperators()
+    {
+        return self::$allowedFilterOperators;
     }
     
     /**
@@ -118,7 +126,7 @@ class FilterModifier extends ModifierBase
             && !in_array($modifier['operator'],
                 self::$allowedFilterOperators)
         ) {
-            throw new ModifierException('The filter operator "' . $modifier['operator'] . '" is not allowed. You can only use one of the following: 
+            throw new ModifierException('The filter operator "' . $modifier['operator'] . '" is not allowed. You can only use one of the following:
                         ' . implode(', ', self::$allowedFilterOperators));
         }
         
